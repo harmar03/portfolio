@@ -1,254 +1,616 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="CV de Martín Camareno — Desarrollador Web Frontend, estudiante de Multimedios en la UCR">
-  <meta name="theme-color" content="#0b0d14">
-  <title>Martín Camareno · CV</title>
+  <title>CV · Martín Camareno</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <link rel="preconnect" href="https://api.github.com" crossorigin>
-  <link rel="stylesheet" href="css/styles.css">
-
-  <script type="importmap">
-  {
-    "imports": {
-      "@components/": "./js/components/",
-      "@modules/":    "./js/modules/"
+    body {
+      min-height: 100dvh;
+      background: #0a0a0f;
+      color: #e0e0e0;
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow: hidden;
     }
-  }
-  </script>
-  <script type="module" src="js/main.js"></script>
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(108,99,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,99,255,.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    #bg-title {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: .75rem;
+      pointer-events: none;
+      user-select: none;
+    }
+    #bg-title h1 {
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      color: rgba(255,255,255,.06);
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+    #bg-title p {
+      font-size: .75rem;
+      color: rgba(255,255,255,.04);
+      letter-spacing: .05em;
+    }
+
+    /* ── Botón principal ──────────────────────────── */
+    #cv-btn {
+      position: fixed;
+      padding: .9rem 2.5rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      font-family: inherit;
+      background: #6c63ff;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 0 32px #6c63ff60, 0 4px 24px #0006;
+      user-select: none;
+      white-space: nowrap;
+      transform: translate(-50%, -50%);
+      transition: background .2s;
+      left: 50%;
+      top: 50%;
+    }
+    #cv-btn:hover { background: #7d75ff; }
+
+    #toast {
+      position: fixed;
+      top: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a2e;
+      border: 1px solid #333;
+      color: #999;
+      padding: .4rem 1.4rem;
+      border-radius: 50px;
+      font-size: .82rem;
+      opacity: 0;
+      transition: opacity .25s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    #toast.show { opacity: 1; }
+
+    #counter {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: .75rem;
+      color: #444;
+      letter-spacing: .05em;
+    }
+
+    #serious {
+      position: fixed;
+      top: 28%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      opacity: 0;
+      transition: opacity .5s;
+      pointer-events: none;
+    }
+    #serious.show { opacity: 1; }
+    #serious h2 { font-size: 1.6rem; color: #bbb; margin-bottom: .4rem; }
+    #serious p  { font-size: .85rem; color: #555; }
+
+    /* ── Overlay captcha ──────────────────────────── */
+    #overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+    #overlay.show { display: flex; }
+
+    .cbox {
+      background: #111118;
+      border: 1px solid #2a2a3e;
+      border-radius: 14px;
+      padding: 1.75rem;
+      width: min(420px, 92vw);
+    }
+
+    .chead {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #1e1e2e;
+    }
+    .clogo {
+      width: 26px; height: 26px;
+      background: #6c63ff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .65rem; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+    .ctitle { font-size: .85rem; color: #777; }
+    .cnum   { margin-left: auto; font-size: .72rem; color: #444; }
+
+    .cbody h3 {
+      font-size: .9rem;
+      font-weight: 400;
+      color: #bbb;
+      margin-bottom: 1rem;
+      line-height: 1.45;
+    }
+
+    .egrid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      margin-bottom: .25rem;
+    }
+    .ecell {
+      aspect-ratio: 1;
+      background: #1a1a2e;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      font-size: 1.9rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+      user-select: none;
+    }
+    .ecell:hover    { border-color: #444; }
+    .ecell.selected { border-color: #6c63ff; background: #1e1e40; }
+
+    .captxt {
+      background: #0d0d1a;
+      border: 1px solid #2a2a3e;
+      border-radius: 6px;
+      padding: .9rem 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 1.6rem;
+      letter-spacing: .5em;
+      color: #777;
+      text-align: center;
+      margin-bottom: .85rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .captxt::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent 0, transparent 3px,
+        rgba(108,99,255,.04) 3px, rgba(108,99,255,.04) 4px
+      );
+    }
+
+    .cinput {
+      width: 100%;
+      background: #0a0a12;
+      border: 1px solid #2a2a3e;
+      border-radius: 7px;
+      padding: .55rem .9rem;
+      color: #ccc;
+      font-size: .9rem;
+      font-family: inherit;
+      outline: none;
+    }
+    .cinput:focus { border-color: #6c63ff; }
+
+    .chain { display: flex; flex-direction: column; gap: .7rem; }
+    .crow {
+      display: flex; align-items: center; gap: .7rem;
+      opacity: .25;
+      transition: opacity .3s;
+    }
+    .crow.on { opacity: 1; cursor: pointer; }
+    .crow input[type="checkbox"] {
+      width: 17px; height: 17px;
+      accent-color: #6c63ff;
+      cursor: inherit;
+    }
+    .crow label { font-size: .88rem; color: #bbb; cursor: inherit; }
+
+    .prog-wrap {
+      background: #1a1a2e;
+      border-radius: 50px;
+      height: 5px;
+      overflow: hidden;
+      margin: .75rem 0 .5rem;
+    }
+    .prog-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6c63ff, #a78bfa);
+      border-radius: inherit;
+      width: 0%;
+      transition: width .12s linear;
+    }
+
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid #222;
+      border-top-color: #6c63ff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 1.25rem auto .25rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .cerr {
+      font-size: .8rem;
+      min-height: 1.1em;
+      margin: .75rem 0 .9rem;
+    }
+    .cerr.bad { color: #ff6b6b; }
+    .cerr.ok  { color: #4ade80; }
+
+    .cfoot { display: flex; justify-content: flex-end; }
+    .vbtn {
+      background: #6c63ff;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: .55rem 1.4rem;
+      font-size: .88rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .vbtn:hover    { background: #7d75ff; }
+    .vbtn:disabled { background: #222; color: #555; cursor: not-allowed; }
+
+    /* ── Pantalla final ───────────────────────────── */
+    #final {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #0a0a0f;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1.25rem;
+      text-align: center;
+      padding: 2rem;
+    }
+    #final.show { display: flex; }
+    #final h1 {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #6c63ff, #a78bfa, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+    #final p { font-size: .85rem; color: #444; margin-top: .5rem; }
+
+    [hidden] { display: none !important; }
+  </style>
 </head>
 <body>
 
-  <nav-header></nav-header>
+  <div id="bg-title">
+    <h1>CV · MARTÍN CAMARENO</h1>
+    <p>Desarrollador Web Frontend · UCR · Multimedios</p>
+  </div>
 
-  <div class="cv-wrapper">
+  <button id="cv-btn">Abrir CV</button>
 
-    <!-- ── Header ──────────────────────────────────────────── -->
-    <header class="cv-header" id="inicio">
-      <div class="cv-header__inner">
+  <div id="toast"></div>
+  <div id="counter"></div>
 
-        <div class="avatar" aria-hidden="true">MC</div>
+  <div id="serious">
+    <h2>okey ya enserio</h2>
+    <p>dale click al botón, te lo juro que ya funciona</p>
+  </div>
 
-        <div class="cv-header__info">
-          <h1 class="cv-header__name">Martín Camareno</h1>
-          <p class="cv-header__role">Desarrollador Web Frontend</p>
-          <ul class="cv-header__meta">
-            <li><span aria-hidden="true">📍</span> Costa Rica</li>
-            <li><span aria-hidden="true">🎓</span> UCR · Multimedios · 4to año</li>
-            <li>
-              <span aria-hidden="true">✉️</span>
-              <a href="mailto:martincamareno@gmail.com">martincamareno@gmail.com</a>
-            </li>
-            <li>
-              <span aria-hidden="true">💻</span>
-              <a href="https://github.com/harmar03" target="_blank" rel="noopener noreferrer">
-                github.com/harmar03
-              </a>
-            </li>
-          </ul>
-        </div>
+  <div id="overlay">
+    <div class="cbox" id="cbox"></div>
+  </div>
 
-        <button class="btn btn--primary btn--pdf" id="print-btn" aria-label="Exportar como PDF">
-          <span aria-hidden="true">⬇</span> Descargar PDF
-        </button>
-      </div>
-    </header>
+  <div id="final">
+    <h1>busquen<br>como dormir</h1>
+    <p>gracias por su tiempo &nbsp;·&nbsp; CV disponible el próximo año</p>
+  </div>
 
-    <!-- ── Cuerpo: sidebar + main ──────────────────────────── -->
-    <div class="cv-body">
+<script>
+const btn       = document.getElementById('cv-btn')
+const toastEl   = document.getElementById('toast')
+const counterEl = document.getElementById('counter')
+const serious   = document.getElementById('serious')
+const overlay   = document.getElementById('overlay')
+const cbox      = document.getElementById('cbox')
+const finalScr  = document.getElementById('final')
 
-      <!-- Sidebar -->
-      <aside class="cv-sidebar">
+// ── Toast ─────────────────────────────────────────────────────
+let toastTimer
+function toast(msg, ms = 1500) {
+  clearTimeout(toastTimer)
+  toastEl.textContent = msg
+  toastEl.classList.add('show')
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), ms)
+}
 
-        <section class="cv-block" id="sobre-mi" aria-labelledby="perfil-h">
-          <h2 id="perfil-h" class="cv-block__title">Perfil</h2>
-          <p class="cv-block__text">
-            Estudiante de 4to año de <strong>Tecnologías de Información con énfasis en
-            Multimedios</strong> en la UCR. Me especializo en interfaces web modernas,
-            accesibles y de alto rendimiento usando estándares nativos: HTML semántico,
-            CSS avanzado, JavaScript con ES Modules y Web Components.
-            Experiencia en proyectos freelance para clientes locales.
-          </p>
-        </section>
+// ── Phase 1: botón escapa ─────────────────────────────────────
+let clicks = 0
+const MAX = 10
+const MSGS = ['...', 'no', '🤔', 'casi', 'para ya',
+              'jaja no', 'oof', 'ta duro', 'casiiiii', '💀']
 
-        <section class="cv-block" id="habilidades" aria-labelledby="skills-h">
-          <h2 id="skills-h" class="cv-block__title">Habilidades</h2>
+btn.addEventListener('click', onBtnClick)
 
-          <div class="skill-group">
-            <p class="skill-group__label">Frontend</p>
-            <ul class="skill-list">
-              <li class="skill-item">
-                <span class="skill-item__name">HTML5</span>
-                <div class="skill-item__track" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
-                  <div class="skill-item__fill" style="--w:90%"></div>
-                </div>
-              </li>
-              <li class="skill-item">
-                <span class="skill-item__name">CSS Avanzado</span>
-                <div class="skill-item__track" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
-                  <div class="skill-item__fill" style="--w:85%"></div>
-                </div>
-              </li>
-              <li class="skill-item">
-                <span class="skill-item__name">JavaScript</span>
-                <div class="skill-item__track" role="progressbar" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100">
-                  <div class="skill-item__fill" style="--w:82%"></div>
-                </div>
-              </li>
-            </ul>
-          </div>
+function onBtnClick() {
+  clicks++
+  toast(MSGS[clicks - 1] ?? '')
+  counterEl.textContent = clicks + ' / ' + MAX
 
-          <div class="skill-group">
-            <p class="skill-group__label">Estándares web</p>
-            <ul class="skill-list">
-              <li class="skill-item">
-                <span class="skill-item__name">ES Modules</span>
-                <div class="skill-item__track" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100">
-                  <div class="skill-item__fill" style="--w:78%"></div>
-                </div>
-              </li>
-              <li class="skill-item">
-                <span class="skill-item__name">Web Components</span>
-                <div class="skill-item__track" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100">
-                  <div class="skill-item__fill" style="--w:72%"></div>
-                </div>
-              </li>
-              <li class="skill-item">
-                <span class="skill-item__name">Fetch / Async</span>
-                <div class="skill-item__track" role="progressbar" aria-valuenow="76" aria-valuemin="0" aria-valuemax="100">
-                  <div class="skill-item__fill" style="--w:76%"></div>
-                </div>
-              </li>
-            </ul>
-          </div>
+  if (clicks >= MAX) {
+    // Regresa al centro con rebote
+    btn.style.transition =
+      'left .45s cubic-bezier(.34,1.56,.64,1), top .45s cubic-bezier(.34,1.56,.64,1)'
+    btn.style.left = '50%'
+    btn.style.top  = '50%'
+    counterEl.textContent = ''
 
-          <div class="skill-group">
-            <p class="skill-group__label">Backend</p>
-            <ul class="skill-list">
-              <li class="skill-item">
-                <span class="skill-item__name">Node.js</span>
-                <div class="skill-item__track" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100">
-                  <div class="skill-item__fill" style="--w:62%"></div>
-                </div>
-              </li>
-              <li class="skill-item">
-                <span class="skill-item__name">Express</span>
-                <div class="skill-item__track" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100">
-                  <div class="skill-item__fill" style="--w:55%"></div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </section>
+    setTimeout(() => serious.classList.add('show'), 700)
 
-        <section class="cv-block" id="idiomas" aria-labelledby="lang-h">
-          <h2 id="lang-h" class="cv-block__title">Idiomas</h2>
-          <ul class="lang-list">
-            <li class="lang-item">
-              <div class="lang-item__header">
-                <span class="lang-item__name">Español</span>
-                <span class="lang-item__level">Nativo</span>
-              </div>
-              <div class="lang-item__track">
-                <div class="lang-item__fill" style="--w:100%"></div>
-              </div>
-            </li>
-            <li class="lang-item">
-              <div class="lang-item__header">
-                <span class="lang-item__name">Inglés</span>
-                <span class="lang-item__level">Básico</span>
-              </div>
-              <div class="lang-item__track">
-                <div class="lang-item__fill" style="--w:35%"></div>
-              </div>
-            </li>
-          </ul>
-        </section>
+    btn.removeEventListener('click', onBtnClick)
+    btn.addEventListener('click', startCaptchas, { once: true })
+  } else {
+    const speed = Math.max(0.04, 0.16 - clicks * 0.012)
+    btn.style.transition = `left ${speed}s ease, top ${speed}s ease`
 
-        <section class="cv-block sidebar-contact">
-          <h2 class="cv-block__title">Contacto</h2>
-          <a href="mailto:martincamareno@gmail.com" class="contact-inline">
-            ✉️ martincamareno@gmail.com
-          </a>
-          <a href="https://github.com/harmar03" target="_blank" rel="noopener noreferrer" class="contact-inline">
-            💻 github.com/harmar03
-          </a>
-        </section>
+    const m  = 90
+    const bw = btn.offsetWidth  / 2
+    const bh = btn.offsetHeight / 2
+    const x  = m + bw + Math.random() * (window.innerWidth  - 2 * (m + bw))
+    const y  = m + bh + Math.random() * (window.innerHeight - 2 * (m + bh))
+    btn.style.left = x + 'px'
+    btn.style.top  = y + 'px'
+  }
+}
 
-      </aside>
+// ── Captchas ──────────────────────────────────────────────────
+let step = 0
+const captchas = [c1, c2, c3, c4]
 
-      <!-- Main -->
-      <main class="cv-main" id="main">
+function startCaptchas() {
+  serious.classList.remove('show')
+  step = 0
+  openCaptcha()
+}
 
-        <section class="cv-block" id="educacion" aria-labelledby="edu-h">
-          <h2 id="edu-h" class="cv-block__title">Educación</h2>
-          <div class="timeline">
-            <article class="tl-item">
-              <div class="tl-item__dot" aria-hidden="true"></div>
-              <div class="tl-item__content">
-                <div class="tl-item__head">
-                  <div>
-                    <h3 class="tl-item__role">Bachillerato en Tecnologías de Información</h3>
-                    <p class="tl-item__org">Universidad de Costa Rica (UCR) · Énfasis en Multimedios</p>
-                  </div>
-                  <time class="tl-item__date" datetime="2022/2026">2022 – 2026</time>
-                </div>
-                <ul class="tl-item__bullets">
-                  <li>Desarrollo web con HTML, CSS y JavaScript modernos</li>
-                  <li>Diseño de interfaces, UX y accesibilidad web</li>
-                  <li>Producción multimedia: video, audio e imagen digital</li>
-                  <li>Node.js, Express y arquitecturas cliente-servidor</li>
-                </ul>
-              </div>
-            </article>
-          </div>
-        </section>
+function openCaptcha() {
+  overlay.style.display = 'flex'
+  cbox.innerHTML = ''
+  captchas[step]()
+}
 
-        <section class="cv-block" id="experiencia" aria-labelledby="exp-h">
-          <h2 id="exp-h" class="cv-block__title">Experiencia</h2>
-          <div class="timeline">
-            <article class="tl-item">
-              <div class="tl-item__dot" aria-hidden="true"></div>
-              <div class="tl-item__content">
-                <div class="tl-item__head">
-                  <div>
-                    <h3 class="tl-item__role">Desarrollador Web Freelance</h3>
-                    <p class="tl-item__org">Independiente · Costa Rica</p>
-                  </div>
-                  <time class="tl-item__date" datetime="2024">2024 – presente</time>
-                </div>
-                <ul class="tl-item__bullets">
-                  <li>Diseño y desarrollo de sitios web a medida para clientes locales</li>
-                  <li>Implementación de páginas responsivas con HTML, CSS y JS vanilla</li>
-                  <li>Optimización de rendimiento: Core Web Vitals, lazy loading</li>
-                  <li>Entrega completa desde maqueta hasta deploy en producción</li>
-                </ul>
-              </div>
-            </article>
-          </div>
-        </section>
+function next() {
+  step++
+  if (step >= captchas.length) {
+    overlay.style.display = 'none'
+    btn.hidden = true
+    document.getElementById('bg-title').hidden = true
+    finalScr.classList.add('show')
+  } else {
+    openCaptcha()
+  }
+}
 
-        <section class="cv-block" id="proyectos" aria-labelledby="proj-h">
-          <h2 id="proj-h" class="cv-block__title">Proyectos</h2>
-          <p class="cv-block__sub">Cargados desde GitHub en tiempo real</p>
-          <div id="projects-grid" class="projects-grid" role="list" aria-live="polite" aria-busy="true">
-            <div class="skeleton-card" aria-hidden="true"></div>
-            <div class="skeleton-card" aria-hidden="true"></div>
-            <div class="skeleton-card" aria-hidden="true"></div>
-          </div>
-        </section>
+function head(n) {
+  return `<div class="chead">
+    <div class="clogo">✓</div>
+    <span class="ctitle">Verificación de seguridad</span>
+    <span class="cnum">${n} / 4</span>
+  </div>`
+}
 
-      </main>
-    </div><!-- /cv-body -->
+// Captcha 1 — grid de emojis, busca 🚦 (no hay ninguno)
+function c1() {
+  const emojis = ['🐸','🦋','🍕','🎸','🌮','🎃','🦊','🍩','🌵']
+  let tries = 0, sel = new Set()
 
-  </div><!-- /cv-wrapper -->
+  cbox.innerHTML = head(1) + `
+    <div class="cbody">
+      <h3>Selecciona todas las imágenes que contengan un <strong>🚦 semáforo</strong></h3>
+      <div class="egrid" id="g1"></div>
+    </div>
+    <div class="cerr bad" id="e1"></div>
+    <div class="cfoot"><button class="vbtn" id="b1">Verificar</button></div>`
 
-  <footer class="footer">
-    <p>Martín Camareno · 2026 · Construido con HTML, CSS y JavaScript vanilla</p>
-  </footer>
+  const grid = document.getElementById('g1')
+  emojis.forEach((e, i) => {
+    const cell = document.createElement('div')
+    cell.className = 'ecell'
+    cell.textContent = e
+    cell.onclick = () => {
+      sel.has(i)
+        ? (sel.delete(i), cell.classList.remove('selected'))
+        : (sel.add(i),    cell.classList.add('selected'))
+    }
+    grid.appendChild(cell)
+  })
 
+  const err = document.getElementById('e1')
+  document.getElementById('b1').onclick = () => {
+    tries++
+    err.textContent = sel.size === 0
+      ? 'Debes seleccionar al menos una imagen.'
+      : 'Ninguna de esas es un semáforo. Inténtalo de nuevo.'
+    sel.clear()
+    grid.querySelectorAll('.selected').forEach(c => c.classList.remove('selected'))
+    if (tries >= 3) {
+      err.textContent = '...ok, no hay semáforos. Seguimos de todas formas.'
+      document.getElementById('b1').disabled = true
+      setTimeout(next, 1800)
+    }
+  }
+}
+
+// Captcha 2 — texto distorsionado (siempre falla 3 veces)
+function c2() {
+  const opts = ['X9mK2p','Qr4@Lz','7vBn!k','pZ3Yx9']
+  const shown = opts[Math.floor(Math.random() * opts.length)]
+  let tries = 0
+
+  cbox.innerHTML = head(2) + `
+    <div class="cbody">
+      <h3>Escribe exactamente el texto que ves en la imagen</h3>
+      <div class="captxt">${shown}</div>
+      <input class="cinput" id="i2" type="text" placeholder="Ingresa el texto...">
+    </div>
+    <div class="cerr bad" id="e2"></div>
+    <div class="cfoot"><button class="vbtn" id="b2">Verificar</button></div>`
+
+  const msgs = [
+    'Texto incorrecto. Vuelve a intentarlo.',
+    'Sigue sin ser correcto. ¿Estás bien?',
+    '...ya no importa. Pasas igual.',
+  ]
+  const err = document.getElementById('e2')
+  const vb  = document.getElementById('b2')
+  vb.onclick = () => {
+    err.textContent = msgs[Math.min(tries, msgs.length - 1)]
+    tries++
+    if (tries >= 3) {
+      vb.disabled = true
+      setTimeout(next, 1700)
+    }
+  }
+}
+
+// Captcha 3 — checkboxes encadenados
+function c3() {
+  const qs = [
+    'No soy un robot',
+    '¿Estás seguro?',
+    '¿Seguro-seguro?',
+    'Jura por tu abuela que no eres robot',
+  ]
+
+  cbox.innerHTML = head(3) + `
+    <div class="cbody">
+      <h3>Confirma tu identidad marcando todas las casillas</h3>
+      <div class="chain" id="ch3"></div>
+    </div>
+    <div class="cerr ok" id="e3"></div>
+    <div class="cfoot"><button class="vbtn" id="b3" disabled>Verificar</button></div>`
+
+  const chain = document.getElementById('ch3')
+  let done = 0
+
+  qs.forEach((q, i) => {
+    const row = document.createElement('div')
+    row.className = 'crow' + (i === 0 ? ' on' : '')
+    row.id = 'r' + i
+    row.innerHTML = `<input type="checkbox" id="ck${i}" ${i > 0 ? 'disabled' : ''}>
+                     <label for="ck${i}">${q}</label>`
+    chain.appendChild(row)
+
+    row.querySelector('input').onchange = e => {
+      if (!e.target.checked) return
+      done++
+      const nxt = document.getElementById('r' + (i + 1))
+      if (nxt) {
+        nxt.classList.add('on')
+        nxt.querySelector('input').disabled = false
+      }
+      if (done >= qs.length) {
+        document.getElementById('e3').textContent = '✅ Verificado... tal vez.'
+        document.getElementById('b3').disabled = false
+      }
+    }
+  })
+
+  document.getElementById('b3').onclick = next
+}
+
+// Captcha 4 — barra que falla una vez y luego pasa
+function c4() {
+  cbox.innerHTML = head(4) + `
+    <div class="cbody" style="text-align:center">
+      <h3>Analizando tu comportamiento humano...</h3>
+      <div class="spinner" id="sp"></div>
+      <div class="prog-wrap"><div class="prog-fill" id="pf"></div></div>
+      <p style="color:#555;font-size:.8rem;margin-top:.4rem" id="st">Iniciando... 0%</p>
+    </div>
+    <div class="cerr" id="e4"></div>
+    <div class="cfoot"><button class="vbtn" id="b4" disabled>Verificar</button></div>`
+
+  const steps = [
+    [12, 'Revisando historial del navegador...'],
+    [28, 'Analizando patrones de tipeo...'],
+    [45, 'Detectando movimientos del mouse...'],
+    [61, 'Consultando base de datos de robots...'],
+    [77, 'Verificando inteligencia... (tardando)'],
+    [91, 'Casi listo...'],
+    [100, ''],
+  ]
+
+  function runBar(label, onDone) {
+    let i = 0
+    const bar = document.getElementById('pf')
+    const st  = document.getElementById('st')
+    const iv  = setInterval(() => {
+      if (i >= steps.length) { clearInterval(iv); onDone(); return }
+      const [pct, msg] = steps[i++]
+      bar.style.width = pct + '%'
+      if (msg) st.textContent = msg + ' ' + pct + '%'
+      else     st.textContent = label + ' 100%'
+    }, 430)
+  }
+
+  runBar('Analizando...', () => {
+    const err = document.getElementById('e4')
+    document.getElementById('sp').style.display = 'none'
+    err.className = 'cerr bad'
+    err.textContent = 'Error: comportamiento demasiado humano. Reintentando...'
+
+    setTimeout(() => {
+      err.textContent = ''
+      const bar = document.getElementById('pf')
+      bar.style.transition = 'none'
+      bar.style.width = '0%'
+      bar.offsetHeight
+      bar.style.transition = 'width .12s linear'
+      document.getElementById('sp').style.display = ''
+
+      runBar('Segundo intento...', () => {
+        document.getElementById('sp').style.display = 'none'
+        const e = document.getElementById('e4')
+        e.className = 'cerr ok'
+        e.textContent = '¡Verificación completa! (de milagro)'
+        document.getElementById('b4').disabled = false
+      })
+    }, 1600)
+  })
+
+  document.getElementById('b4').onclick = next
+}
+</script>
 </body>
 </html>
