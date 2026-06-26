@@ -137,12 +137,39 @@ function setupReveal() {
 
 // ── 4. Custom event del nav-header (tema cambiado) ───────────
 document.addEventListener('theme-change', (/** @type {CustomEvent} */ e) => {
-  // El evento llega con composed:true desde el Shadow DOM del nav
   applyTheme(e.detail.theme)
 })
 
 
-// ── 5. Cleanup al cerrar la página ───────────────────────────
+// ── 5. Barras de idioma con IntersectionObserver ─────────────
+function setupLanguageBars() {
+  const fills = document.querySelectorAll('.lang-item__fill')
+  if (!fills.length) return
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-animated')
+          observer.unobserve(entry.target)
+        }
+      })
+    },
+    { threshold: 0.4 }
+  )
+
+  fills.forEach(el => observer.observe(el))
+}
+
+
+// ── 6. Botón "Descargar PDF" ──────────────────────────────────
+function setupPrintButton() {
+  const btn = document.getElementById('print-btn')
+  btn?.addEventListener('click', () => window.print())
+}
+
+
+// ── 7. Cleanup al cerrar la página ───────────────────────────
 window.addEventListener('unload', () => {
   stopWatchingTheme()
 }, { once: true })
@@ -151,3 +178,5 @@ window.addEventListener('unload', () => {
 // ── Init ──────────────────────────────────────────────────────
 renderProjects()
 setupReveal()
+setupLanguageBars()
+setupPrintButton()

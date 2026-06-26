@@ -1,5 +1,5 @@
 /*
-  Portfolio — Martín Camareno
+  CV Portfolio — Martín Camareno
   ─────────────────────────────────────────────────────────────
   Demuestra:
   · @layer (cascade management)
@@ -8,6 +8,7 @@
   · CSS Grid + Flexbox
   · Container queries
   · clip-path
+  · @media print (exportar como PDF)
   · Animaciones y transiciones
   · @media prefers-color-scheme / prefers-reduced-motion
   · Mobile-first responsive design
@@ -731,4 +732,435 @@
   .text-muted  { color: var(--text-muted); }
   .font-mono   { font-family: var(--font-mono); }
   .text-center { text-align: center; }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   CV — componentes específicos del currículum
+   ══════════════════════════════════════════════════════════ */
+@layer components {
+
+  /* ── Section header alineado a la izquierda ──────────── */
+  .section__header--left {
+    text-align: left;
+    margin-block-end: var(--sp-8);
+  }
+
+  .section__header--left .section__divider {
+    margin-inline: 0;
+  }
+
+
+  /* ── CV Header ────────────────────────────────────────── */
+  .cv-header {
+    position: relative;
+    padding-block: var(--sp-16) var(--sp-12);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .cv-header__layout {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--sp-6);
+    align-items: center;
+  }
+
+  @media (max-width: 700px) {
+    .cv-header__layout {
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto;
+    }
+
+    .cv-header__actions {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: var(--sp-3);
+      flex-wrap: wrap;
+    }
+  }
+
+  /* Avatar con iniciales */
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(
+      135deg,
+      var(--color-brand),
+      var(--color-accent)
+    );
+    display: grid;
+    place-items: center;
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--text-on-brand);
+    letter-spacing: -0.03em;
+    flex-shrink: 0;
+    box-shadow: var(--glow);
+  }
+
+  .cv-header__name {
+    font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+    margin-block-end: var(--sp-1);
+  }
+
+  .cv-header__role {
+    color: var(--color-brand-light);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    margin-block-end: var(--sp-3);
+  }
+
+  .cv-header__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-6);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .cv-header__meta li {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+
+  .cv-header__meta a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--t-fast);
+  }
+
+  .cv-header__meta a:hover { color: var(--color-brand-light); }
+
+  .meta-icon { font-size: 1rem; }
+
+  .cv-header__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  /* Blob decorativo del header */
+  .cv-header__decoration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .header-blob {
+    position: absolute;
+    top: -30%;
+    right: -10%;
+    width: 40vw;
+    max-width: 500px;
+    aspect-ratio: 1;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklch, var(--color-brand) 14%, transparent),
+      transparent 70%
+    );
+    filter: blur(50px);
+  }
+
+
+  /* ── Perfil (resumen CV) ──────────────────────────────── */
+  .cv-summary {
+    font-size: var(--text-lg);
+    line-height: 1.8;
+    color: var(--text-muted);
+    max-width: 75ch;
+  }
+
+  .cv-summary strong { color: var(--text); }
+
+
+  /* ── Timeline (educación / experiencia) ───────────────── */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: var(--sp-4);
+  }
+
+  /* Marcador: círculo + línea vertical */
+  .timeline-item__marker {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .timeline-item__marker::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-brand);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-brand) 25%, transparent);
+    flex-shrink: 0;
+    margin-block-start: 0.35rem;
+  }
+
+  .timeline-item__marker::after {
+    content: '';
+    flex: 1;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--border), transparent);
+    margin-block-start: var(--sp-2);
+  }
+
+  .timeline-item__body {
+    padding-block-end: var(--sp-6);
+  }
+
+  .timeline-item__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    flex-wrap: wrap;
+    margin-block-end: var(--sp-3);
+  }
+
+  .timeline-item__title {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--text);
+    margin-block-end: var(--sp-1);
+  }
+
+  .timeline-item__subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-brand-light);
+    font-weight: 500;
+  }
+
+  .timeline-item__period {
+    font-size: var(--text-sm);
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    white-space: nowrap;
+    padding: var(--sp-1) var(--sp-3);
+    background: color-mix(in oklch, var(--color-brand) 12%, transparent);
+    border: 1px solid color-mix(in oklch, var(--color-brand) 25%, transparent);
+    border-radius: var(--r-full);
+    flex-shrink: 0;
+  }
+
+  .timeline-item__details {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    padding-inline-start: 0;
+  }
+
+  .timeline-item__details li {
+    position: relative;
+    padding-inline-start: var(--sp-6);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .timeline-item__details li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+
+  /* ── Skills por categoría ─────────────────────────────── */
+  .skills-categories {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-8);
+  }
+
+  .skills-category__label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-block-end: var(--sp-4);
+    padding-block-end: var(--sp-2);
+    border-bottom: 1px solid var(--border);
+  }
+
+
+  /* ── Idiomas ──────────────────────────────────────────── */
+  .lang-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    max-width: 480px;
+  }
+
+  .lang-item {
+    display: grid;
+    grid-template-columns: 2rem 1fr 1fr;
+    align-items: center;
+    gap: var(--sp-4);
+  }
+
+  .lang-item__flag { font-size: 1.5rem; }
+
+  .lang-item__name {
+    display: block;
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .lang-item__level {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    margin-block-start: 2px;
+  }
+
+  .lang-item__bar {
+    height: 6px;
+    background: color-mix(in oklch, var(--text) 10%, transparent);
+    border-radius: var(--r-full);
+    overflow: hidden;
+  }
+
+  .lang-item__fill {
+    height: 100%;
+    width: 0;
+    border-radius: var(--r-full);
+    background: linear-gradient(90deg, var(--color-brand), var(--color-accent));
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+  }
+
+  /* Animar las barras de idioma con IntersectionObserver desde JS */
+  .lang-item__fill.is-animated {
+    width: var(--fill);
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   PRINT — estilos para exportar como PDF
+   (ocultar decoración, nav, fondo; mostrar todo en blanco)
+   ══════════════════════════════════════════════════════════ */
+@media print {
+
+  /* Forzar tema claro en impresión */
+  :root,
+  [data-theme="dark"],
+  [data-theme="light"] {
+    --bg:             #ffffff;
+    --bg-alt:         #f5f5f7;
+    --surface:        #ffffff;
+    --surface-raised: #f0f0f5;
+    --border:         #d1d5db;
+    --text:           #111827;
+    --text-muted:     #4b5563;
+    --text-on-brand:  #ffffff;
+    --color-brand:       #6d28d9;
+    --color-brand-light: #7c3aed;
+    --color-accent:      #059669;
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+    --glow: none;
+  }
+
+  /* Eliminar fondos y cajas de sombra */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Ocultar elementos no imprimibles */
+  nav-header,
+  .cv-header__decoration,
+  .hero__decoration,
+  .cv-header__actions .btn--outline,
+  .section__subtitle,
+  .contact-card,
+  #contacto,
+  .footer,
+  #print-btn {
+    display: none !important;
+  }
+
+  /* Layout de impresión */
+  body {
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #111827;
+    background: white;
+  }
+
+  /* CV Header impreso */
+  .cv-header {
+    padding-block: 1.5cm 1cm;
+    border-bottom: 2pt solid #6d28d9;
+    background: white;
+  }
+
+  .cv-header__layout {
+    grid-template-columns: 70pt 1fr;
+    gap: 20pt;
+  }
+
+  .avatar {
+    width: 70pt;
+    height: 70pt;
+    font-size: 18pt;
+    background: #6d28d9;
+  }
+
+  .cv-header__name { font-size: 22pt; }
+  .cv-header__role { font-size: 12pt; }
+  .cv-header__meta { font-size: 9pt; }
+
+  /* Secciones sin fondo alternado */
+  .section, .section--alt {
+    padding-block: 0.6cm;
+    background: white;
+    break-inside: avoid;
+  }
+
+  .section__title { font-size: 13pt; }
+
+  /* Timeline compacto */
+  .timeline-item__title  { font-size: 11pt; }
+  .timeline-item__period { background: none; border: none; font-size: 9pt; }
+
+  /* Skill badges simplificados */
+  .skills-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120pt, 1fr));
+    gap: 8pt;
+  }
+
+  /* Proyectos: evitar corte de página */
+  .projects-grid { break-inside: avoid; }
+  .project-card  { break-inside: avoid; }
+
+  /* Idiomas */
+  .lang-item__fill { width: var(--fill) !important; }
+
+  /* Márgenes de página */
+  @page {
+    margin: 1.5cm 1.8cm;
+    size: A4;
+  }
 }
