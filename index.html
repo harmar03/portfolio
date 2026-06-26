@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="CV de Martín Camareno — Desarrollador Web Frontend, estudiante de Multimedios en la UNA">
-  <meta name="theme-color" content="#0d0f1a">
-
+  <meta name="theme-color" content="#0b0d14">
   <title>Martín Camareno · CV</title>
 
   <link rel="preconnect" href="https://api.github.com" crossorigin>
@@ -25,33 +24,26 @@
 
   <nav-header></nav-header>
 
-  <!-- ── CV Header ───────────────────────────────────────────── -->
-  <header id="inicio" class="cv-header">
-    <div class="container">
-      <div class="cv-header__layout">
+  <div class="cv-wrapper">
 
-        <!-- Avatar con iniciales en CSS -->
+    <!-- ── Header ──────────────────────────────────────────── -->
+    <header class="cv-header" id="inicio">
+      <div class="cv-header__inner">
+
         <div class="avatar" aria-hidden="true">MC</div>
 
-        <!-- Info principal -->
-        <div class="cv-header__bio">
+        <div class="cv-header__info">
           <h1 class="cv-header__name">Martín Camareno</h1>
           <p class="cv-header__role">Desarrollador Web Frontend</p>
-          <ul class="cv-header__meta" aria-label="Datos de contacto">
+          <ul class="cv-header__meta">
+            <li><span aria-hidden="true">📍</span> Costa Rica</li>
+            <li><span aria-hidden="true">🎓</span> UNA · Multimedios · 4to año</li>
             <li>
-              <span class="meta-icon" aria-hidden="true">📍</span>
-              Costa Rica
-            </li>
-            <li>
-              <span class="meta-icon" aria-hidden="true">🎓</span>
-              UNA · Multimedios · 4to año
-            </li>
-            <li>
-              <span class="meta-icon" aria-hidden="true">✉️</span>
+              <span aria-hidden="true">✉️</span>
               <a href="mailto:martincamareno@gmail.com">martincamareno@gmail.com</a>
             </li>
             <li>
-              <span class="meta-icon" aria-hidden="true">💻</span>
+              <span aria-hidden="true">💻</span>
               <a href="https://github.com/harmar03" target="_blank" rel="noopener noreferrer">
                 github.com/harmar03
               </a>
@@ -59,229 +51,203 @@
           </ul>
         </div>
 
-        <!-- Acciones -->
-        <div class="cv-header__actions">
-          <button class="btn btn--primary" id="print-btn" aria-label="Exportar CV como PDF">
-            ⬇ Descargar PDF
-          </button>
-          <a href="#contacto" class="btn btn--outline">Contacto</a>
-        </div>
+        <button class="btn btn--primary btn--pdf" id="print-btn" aria-label="Exportar como PDF">
+          <span aria-hidden="true">⬇</span> Descargar PDF
+        </button>
       </div>
-    </div>
+    </header>
 
-    <!-- Decoración de fondo (oculta en print) -->
-    <div class="cv-header__decoration" aria-hidden="true">
-      <div class="header-blob"></div>
-    </div>
-  </header>
+    <!-- ── Cuerpo: sidebar + main ──────────────────────────── -->
+    <div class="cv-body">
 
-  <main id="main">
+      <!-- Sidebar -->
+      <aside class="cv-sidebar">
 
-    <!-- ── Perfil profesional ─────────────────────────────────── -->
-    <section id="sobre-mi" class="section" aria-labelledby="perfil-title">
-      <div class="container">
-        <header class="section__header section__header--left">
-          <h2 id="perfil-title" class="section__title">Perfil</h2>
-          <div class="section__divider"></div>
-        </header>
-        <p class="cv-summary">
-          Estudiante de cuarto año de <strong>Tecnologías de Información con énfasis en Multimedios</strong>
-          en la UNA, con sólida formación en desarrollo web moderno. Me especializo en la construcción de
-          interfaces rápidas, accesibles y bien estructuradas usando estándares web nativos:
-          HTML semántico, CSS avanzado, JavaScript con ES Modules y Web Components. Experiencia en
-          desarrollo freelance de sitios y aplicaciones web para clientes locales.
-        </p>
-      </div>
-    </section>
-
-    <!-- ── Educación ──────────────────────────────────────────── -->
-    <section id="educacion" class="section section--alt" aria-labelledby="edu-title">
-      <div class="container">
-        <header class="section__header section__header--left">
-          <h2 id="edu-title" class="section__title">Educación</h2>
-          <div class="section__divider"></div>
-        </header>
-
-        <div class="timeline">
-          <article class="timeline-item">
-            <div class="timeline-item__marker" aria-hidden="true"></div>
-            <div class="timeline-item__body">
-              <div class="timeline-item__header">
-                <div>
-                  <h3 class="timeline-item__title">
-                    Bachillerato en Tecnologías de Información
-                  </h3>
-                  <p class="timeline-item__subtitle">
-                    Énfasis en Multimedios · Universidad Nacional (UNA), Heredia
-                  </p>
-                </div>
-                <time class="timeline-item__period" datetime="2022/2026">2022 – 2026</time>
-              </div>
-              <ul class="timeline-item__details">
-                <li>Desarrollo web con HTML, CSS, JavaScript y frameworks modernos</li>
-                <li>Diseño de interfaces, experiencia de usuario y accesibilidad</li>
-                <li>Producción multimedia: video, audio e imagen digital</li>
-                <li>Bases de Node.js, Express y arquitecturas cliente-servidor</li>
-              </ul>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Experiencia ────────────────────────────────────────── -->
-    <section id="experiencia" class="section" aria-labelledby="exp-title">
-      <div class="container">
-        <header class="section__header section__header--left">
-          <h2 id="exp-title" class="section__title">Experiencia</h2>
-          <div class="section__divider"></div>
-        </header>
-
-        <div class="timeline">
-          <article class="timeline-item">
-            <div class="timeline-item__marker" aria-hidden="true"></div>
-            <div class="timeline-item__body">
-              <div class="timeline-item__header">
-                <div>
-                  <h3 class="timeline-item__title">Desarrollador Web Freelance</h3>
-                  <p class="timeline-item__subtitle">Independiente · Costa Rica</p>
-                </div>
-                <time class="timeline-item__period" datetime="2024">2024 – Presente</time>
-              </div>
-              <ul class="timeline-item__details">
-                <li>Diseño y desarrollo de sitios web a medida para clientes locales</li>
-                <li>Implementación de páginas responsivas con HTML, CSS y JavaScript vanilla</li>
-                <li>Optimización de rendimiento web: Core Web Vitals, lazy loading y caching</li>
-                <li>Entrega de proyectos completos desde la maqueta hasta el deploy</li>
-              </ul>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Habilidades ────────────────────────────────────────── -->
-    <section id="habilidades" class="section section--alt" aria-labelledby="skills-title">
-      <div class="container">
-        <header class="section__header section__header--left">
-          <h2 id="skills-title" class="section__title">Habilidades técnicas</h2>
-          <div class="section__divider"></div>
-        </header>
-
-        <div class="skills-categories">
-          <div class="skills-category">
-            <h3 class="skills-category__label">Frontend</h3>
-            <div class="skills-grid">
-              <skill-badge label="HTML5" icon="html" level="90"></skill-badge>
-              <skill-badge label="CSS Avanzado" icon="css" level="85"></skill-badge>
-              <skill-badge label="JavaScript" icon="js" level="82"></skill-badge>
-            </div>
-          </div>
-
-          <div class="skills-category">
-            <h3 class="skills-category__label">Estándares web</h3>
-            <div class="skills-grid">
-              <skill-badge label="ES Modules" icon="esm" level="78"></skill-badge>
-              <skill-badge label="Web Components" icon="wc" level="72"></skill-badge>
-              <skill-badge label="Async / Fetch" icon="async" level="76"></skill-badge>
-            </div>
-          </div>
-
-          <div class="skills-category">
-            <h3 class="skills-category__label">Backend / Herramientas</h3>
-            <div class="skills-grid">
-              <skill-badge label="Node.js" icon="node" level="62"></skill-badge>
-              <skill-badge label="Express" icon="express" level="55"></skill-badge>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Proyectos (GitHub API) ─────────────────────────────── -->
-    <section id="proyectos" class="section" aria-labelledby="projects-title">
-      <div class="container">
-        <header class="section__header section__header--left">
-          <h2 id="projects-title" class="section__title">Proyectos destacados</h2>
-          <div class="section__divider"></div>
-          <p class="section__subtitle">Cargados desde GitHub en tiempo real</p>
-        </header>
-
-        <div id="projects-grid" class="projects-grid" role="list" aria-live="polite" aria-busy="true">
-          <div class="skeleton-card" aria-hidden="true"></div>
-          <div class="skeleton-card" aria-hidden="true"></div>
-          <div class="skeleton-card" aria-hidden="true"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Idiomas ────────────────────────────────────────────── -->
-    <section id="idiomas" class="section section--alt" aria-labelledby="lang-title">
-      <div class="container">
-        <header class="section__header section__header--left">
-          <h2 id="lang-title" class="section__title">Idiomas</h2>
-          <div class="section__divider"></div>
-        </header>
-
-        <ul class="lang-list" role="list">
-          <li class="lang-item">
-            <span class="lang-item__flag" aria-hidden="true">🇨🇷</span>
-            <div>
-              <strong class="lang-item__name">Español</strong>
-              <span class="lang-item__level">Nativo</span>
-            </div>
-            <div class="lang-item__bar">
-              <div class="lang-item__fill" style="--fill: 100%"></div>
-            </div>
-          </li>
-          <li class="lang-item">
-            <span class="lang-item__flag" aria-hidden="true">🇺🇸</span>
-            <div>
-              <strong class="lang-item__name">Inglés</strong>
-              <span class="lang-item__level">Básico (lectura técnica)</span>
-            </div>
-            <div class="lang-item__bar">
-              <div class="lang-item__fill" style="--fill: 35%"></div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ── Contacto ───────────────────────────────────────────── -->
-    <section id="contacto" class="section" aria-labelledby="contact-title">
-      <div class="container container--narrow">
-        <header class="section__header section__header--left">
-          <h2 id="contact-title" class="section__title">Contacto</h2>
-          <div class="section__divider"></div>
-        </header>
-
-        <div class="contact-card">
-          <p class="contact__text">
-            ¿Tenés un proyecto o querés contratarme? Escribime directamente.
+        <section class="cv-block" id="sobre-mi" aria-labelledby="perfil-h">
+          <h2 id="perfil-h" class="cv-block__title">Perfil</h2>
+          <p class="cv-block__text">
+            Estudiante de 4to año de <strong>Tecnologías de Información con énfasis en
+            Multimedios</strong> en la UNA. Me especializo en interfaces web modernas,
+            accesibles y de alto rendimiento usando estándares nativos: HTML semántico,
+            CSS avanzado, JavaScript con ES Modules y Web Components.
+            Experiencia en proyectos freelance para clientes locales.
           </p>
-          <a href="mailto:martincamareno@gmail.com" class="btn btn--primary btn--large">
-            martincamareno@gmail.com
-          </a>
-          <div class="contact__links">
-            <a href="https://github.com/harmar03" class="contact__link"
-               target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-          </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-  </main>
+        <section class="cv-block" id="habilidades" aria-labelledby="skills-h">
+          <h2 id="skills-h" class="cv-block__title">Habilidades</h2>
+
+          <div class="skill-group">
+            <p class="skill-group__label">Frontend</p>
+            <ul class="skill-list">
+              <li class="skill-item">
+                <span class="skill-item__name">HTML5</span>
+                <div class="skill-item__track" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
+                  <div class="skill-item__fill" style="--w:90%"></div>
+                </div>
+              </li>
+              <li class="skill-item">
+                <span class="skill-item__name">CSS Avanzado</span>
+                <div class="skill-item__track" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
+                  <div class="skill-item__fill" style="--w:85%"></div>
+                </div>
+              </li>
+              <li class="skill-item">
+                <span class="skill-item__name">JavaScript</span>
+                <div class="skill-item__track" role="progressbar" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100">
+                  <div class="skill-item__fill" style="--w:82%"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="skill-group">
+            <p class="skill-group__label">Estándares web</p>
+            <ul class="skill-list">
+              <li class="skill-item">
+                <span class="skill-item__name">ES Modules</span>
+                <div class="skill-item__track" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100">
+                  <div class="skill-item__fill" style="--w:78%"></div>
+                </div>
+              </li>
+              <li class="skill-item">
+                <span class="skill-item__name">Web Components</span>
+                <div class="skill-item__track" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100">
+                  <div class="skill-item__fill" style="--w:72%"></div>
+                </div>
+              </li>
+              <li class="skill-item">
+                <span class="skill-item__name">Fetch / Async</span>
+                <div class="skill-item__track" role="progressbar" aria-valuenow="76" aria-valuemin="0" aria-valuemax="100">
+                  <div class="skill-item__fill" style="--w:76%"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="skill-group">
+            <p class="skill-group__label">Backend</p>
+            <ul class="skill-list">
+              <li class="skill-item">
+                <span class="skill-item__name">Node.js</span>
+                <div class="skill-item__track" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100">
+                  <div class="skill-item__fill" style="--w:62%"></div>
+                </div>
+              </li>
+              <li class="skill-item">
+                <span class="skill-item__name">Express</span>
+                <div class="skill-item__track" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100">
+                  <div class="skill-item__fill" style="--w:55%"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="cv-block" id="idiomas" aria-labelledby="lang-h">
+          <h2 id="lang-h" class="cv-block__title">Idiomas</h2>
+          <ul class="lang-list">
+            <li class="lang-item">
+              <div class="lang-item__header">
+                <span class="lang-item__name">Español</span>
+                <span class="lang-item__level">Nativo</span>
+              </div>
+              <div class="lang-item__track">
+                <div class="lang-item__fill" style="--w:100%"></div>
+              </div>
+            </li>
+            <li class="lang-item">
+              <div class="lang-item__header">
+                <span class="lang-item__name">Inglés</span>
+                <span class="lang-item__level">Básico</span>
+              </div>
+              <div class="lang-item__track">
+                <div class="lang-item__fill" style="--w:35%"></div>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section class="cv-block sidebar-contact">
+          <h2 class="cv-block__title">Contacto</h2>
+          <a href="mailto:martincamareno@gmail.com" class="contact-inline">
+            ✉️ martincamareno@gmail.com
+          </a>
+          <a href="https://github.com/harmar03" target="_blank" rel="noopener noreferrer" class="contact-inline">
+            💻 github.com/harmar03
+          </a>
+        </section>
+
+      </aside>
+
+      <!-- Main -->
+      <main class="cv-main" id="main">
+
+        <section class="cv-block" id="educacion" aria-labelledby="edu-h">
+          <h2 id="edu-h" class="cv-block__title">Educación</h2>
+          <div class="timeline">
+            <article class="tl-item">
+              <div class="tl-item__dot" aria-hidden="true"></div>
+              <div class="tl-item__content">
+                <div class="tl-item__head">
+                  <div>
+                    <h3 class="tl-item__role">Bachillerato en Tecnologías de Información</h3>
+                    <p class="tl-item__org">Universidad Nacional (UNA) · Énfasis en Multimedios</p>
+                  </div>
+                  <time class="tl-item__date" datetime="2022/2026">2022 – 2026</time>
+                </div>
+                <ul class="tl-item__bullets">
+                  <li>Desarrollo web con HTML, CSS y JavaScript modernos</li>
+                  <li>Diseño de interfaces, UX y accesibilidad web</li>
+                  <li>Producción multimedia: video, audio e imagen digital</li>
+                  <li>Node.js, Express y arquitecturas cliente-servidor</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="cv-block" id="experiencia" aria-labelledby="exp-h">
+          <h2 id="exp-h" class="cv-block__title">Experiencia</h2>
+          <div class="timeline">
+            <article class="tl-item">
+              <div class="tl-item__dot" aria-hidden="true"></div>
+              <div class="tl-item__content">
+                <div class="tl-item__head">
+                  <div>
+                    <h3 class="tl-item__role">Desarrollador Web Freelance</h3>
+                    <p class="tl-item__org">Independiente · Costa Rica</p>
+                  </div>
+                  <time class="tl-item__date" datetime="2024">2024 – presente</time>
+                </div>
+                <ul class="tl-item__bullets">
+                  <li>Diseño y desarrollo de sitios web a medida para clientes locales</li>
+                  <li>Implementación de páginas responsivas con HTML, CSS y JS vanilla</li>
+                  <li>Optimización de rendimiento: Core Web Vitals, lazy loading</li>
+                  <li>Entrega completa desde maqueta hasta deploy en producción</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="cv-block" id="proyectos" aria-labelledby="proj-h">
+          <h2 id="proj-h" class="cv-block__title">Proyectos</h2>
+          <p class="cv-block__sub">Cargados desde GitHub en tiempo real</p>
+          <div id="projects-grid" class="projects-grid" role="list" aria-live="polite" aria-busy="true">
+            <div class="skeleton-card" aria-hidden="true"></div>
+            <div class="skeleton-card" aria-hidden="true"></div>
+            <div class="skeleton-card" aria-hidden="true"></div>
+          </div>
+        </section>
+
+      </main>
+    </div><!-- /cv-body -->
+
+  </div><!-- /cv-wrapper -->
 
   <footer class="footer">
-    <div class="container">
-      <p class="footer__text">
-        <strong>Martín Camareno</strong> · Desarrollador Web · 2026
-      </p>
-      <p class="footer__tech">
-        Construido con HTML · CSS @layer · ES Modules · Web Components · GitHub API
-      </p>
-    </div>
+    <p>Martín Camareno · 2026 · Construido con HTML, CSS y JavaScript vanilla</p>
   </footer>
 
 </body>

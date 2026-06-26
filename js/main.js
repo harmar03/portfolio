@@ -1,27 +1,26 @@
 /**
- * main.js — Entry point del portfolio
+ * main.js — Entry point del CV
  *
  * Demuestra:
  * · ES Modules: static imports y dynamic import()
- * · Import Map (resuelto en index.html): @components/ @modules/
+ * · Import Map (@components/, @modules/)
  * · DOM: querySelector, createElement, replaceChildren, setAttribute
  * · Eventos: addEventListener con opciones (once, passive)
  * · Custom events recibidos desde Web Components (composed: true)
- * · IntersectionObserver para reveal de secciones
+ * · IntersectionObserver para animar barras de skills e idiomas
  * · async / await con manejo de errores
  */
 
-// ── Imports estáticos — se descargan junto al módulo ─────────
 import '@components/nav-header.js'
-import '@components/skill-badge.js'
 import { loadPortfolioData } from '@modules/github.js'
 import { getStoredTheme, applyTheme, watchSystemTheme } from '@modules/theme.js'
 
 
-// ── 1. Tema inicial ───────────────────────────────────────────
-applyTheme(getStoredTheme())
+// ── 1. Tema ───────────────────────────────────────────────────
+// Aplica el tema guardado; si no hay ninguno, usa dark como default
+const saved = localStorage.getItem('mc-portfolio-theme')
+applyTheme(saved ?? 'dark')
 
-// Escuchar cambios en la preferencia del SO y aplicarlos en vivo
 const stopWatchingTheme = watchSystemTheme(applyTheme)
 
 
@@ -33,150 +32,93 @@ async function renderProjects() {
   try {
     const { repos } = await loadPortfolioData()
 
-    // Dynamic import — project-card solo se carga cuando hay datos
-    // (lazy loading de módulo, técnica de js-avanzado / rendimiento)
+    // Dynamic import — se carga solo cuando hay datos (rendimiento web)
     await import('@components/project-card.js')
 
     grid.setAttribute('aria-busy', 'false')
-
-    if (repos.length === 0) {
-      grid.replaceChildren(createErrorMessage())
-      return
+    if (repos.length) {
+      grid.replaceChildren(...repos.map(createProjectCard))
+    } else {
+      grid.replaceChildren(createErrorMsg())
     }
-
-    grid.replaceChildren(...repos.map(createProjectCard))
-
   } catch (err) {
-    console.error('[portfolio] Error cargando proyectos:', err)
-    const grid = document.getElementById('projects-grid')
-    grid?.replaceChildren(createErrorMessage())
+    console.error('[cv] Error cargando proyectos:', err)
+    document.getElementById('projects-grid')?.replaceChildren(createErrorMsg())
   }
 }
 
-/**
- * Construye un <project-card> con el repo de GitHub.
- * @param {Object} repo - Objeto de la GitHub REST API v3
- * @returns {HTMLElement}
- */
+/** @param {Object} repo */
 function createProjectCard(repo) {
   const card = document.createElement('project-card')
   card.setAttribute('href',  repo.html_url)
   card.setAttribute('stars', String(repo.stargazers_count))
   card.setAttribute('role',  'listitem')
 
-  // Slot "title"
   const title = document.createElement('h3')
   title.slot = 'title'
   title.textContent = repo.name.replaceAll('-', ' ')
 
-  // Slot "description"
   const desc = document.createElement('p')
   desc.slot = 'description'
   desc.textContent = repo.description ?? 'Sin descripción'
 
-  // Slot "tags" — lenguaje del repo
-  const tagsWrapper = document.createElement('div')
-  tagsWrapper.slot = 'tags'
-  tagsWrapper.className = 'tag-list'
+  const tags = document.createElement('div')
+  tags.slot = 'tags'
+  tags.className = 'tag-list'
 
   if (repo.language) {
     const tag = document.createElement('span')
     tag.className = 'tag'
     tag.textContent = repo.language
-    tagsWrapper.appendChild(tag)
+    tags.appendChild(tag)
   }
 
-  if (repo.topics?.length) {
-    const topicTag = document.createElement('span')
-    topicTag.className = 'tag'
-    topicTag.textContent = repo.topics[0]
-    tagsWrapper.appendChild(topicTag)
-  }
-
-  card.append(title, desc, tagsWrapper)
+  card.append(title, desc, tags)
   return card
 }
 
-function createErrorMessage() {
+function createErrorMsg() {
   const p = document.createElement('p')
-  p.className = 'text-muted text-center'
-  p.style.gridColumn = '1 / -1'
-  p.style.padding = '2rem'
-  p.textContent = 'No se pudieron cargar los proyectos. Revisá directamente en GitHub ↗'
+  p.style.cssText = 'grid-column:1/-1;padding:1.5rem;font-size:.85rem;color:var(--text-3);'
+  p.textContent = 'No se pudieron cargar los proyectos — revisá github.com/harmar03'
   return p
 }
 
 
-// ── 3. Reveal con IntersectionObserver ───────────────────────
-function setupReveal() {
-  // Solo revelar elementos debajo del fold inicial
-  const targets = [
-    ...document.querySelectorAll('.stat'),
-    ...document.querySelectorAll('.about__text'),
-    ...document.querySelectorAll('.section__header'),
-  ]
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible')
-          observer.unobserve(entry.target)
-        }
-      })
-    },
-    { threshold: 0.12 }
-  )
-
-  targets.forEach(el => {
-    el.classList.add('reveal')
-    observer.observe(el)
-  })
-}
-
-
-// ── 4. Custom event del nav-header (tema cambiado) ───────────
-document.addEventListener('theme-change', (/** @type {CustomEvent} */ e) => {
-  applyTheme(e.detail.theme)
-})
-
-
-// ── 5. Barras de idioma con IntersectionObserver ─────────────
-function setupLanguageBars() {
-  const fills = document.querySelectorAll('.lang-item__fill')
+// ── 3. IntersectionObserver: animar barras de skills e idiomas ─
+function setupBars() {
+  const fills = document.querySelectorAll('.skill-item__fill, .lang-item__fill')
   if (!fills.length) return
 
   const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-animated')
-          observer.unobserve(entry.target)
-        }
-      })
-    },
-    { threshold: 0.4 }
+    entries => entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-animated')
+        observer.unobserve(entry.target)
+      }
+    }),
+    { threshold: 0.3 }
   )
 
   fills.forEach(el => observer.observe(el))
 }
 
 
-// ── 6. Botón "Descargar PDF" ──────────────────────────────────
-function setupPrintButton() {
-  const btn = document.getElementById('print-btn')
-  btn?.addEventListener('click', () => window.print())
-}
+// ── 4. Custom event de nav-header (tema cambiado) ─────────────
+document.addEventListener('theme-change', (/** @type {CustomEvent} */ e) => {
+  applyTheme(e.detail.theme)
+})
 
 
-// ── 7. Cleanup al cerrar la página ───────────────────────────
-window.addEventListener('unload', () => {
-  stopWatchingTheme()
-}, { once: true })
+// ── 5. Botón PDF ──────────────────────────────────────────────
+document.getElementById('print-btn')
+  ?.addEventListener('click', () => window.print())
+
+
+// ── 6. Cleanup ────────────────────────────────────────────────
+window.addEventListener('unload', stopWatchingTheme, { once: true })
 
 
 // ── Init ──────────────────────────────────────────────────────
 renderProjects()
-setupReveal()
-setupLanguageBars()
-setupPrintButton()
+setupBars()
