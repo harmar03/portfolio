@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfolio de Martín Camareno — Desarrollador Web y estudiante de Tecnologías de Información con énfasis en Multimedios">
+  <meta name="theme-color" content="#0d0f1a">
+
+  <title>Martín Camareno · Portfolio</title>
+
+  <!-- Performance: resource hints -->
+  <link rel="preconnect" href="https://api.github.com" crossorigin>
+  <link rel="preconnect" href="https://avatars.githubusercontent.com" crossorigin>
+  <link rel="dns-prefetch" href="https://github.com">
+
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Import Map — resolución de módulos bare en el navegador -->
+  <script type="importmap">
+  {
+    "imports": {
+      "@components/": "./js/components/",
+      "@modules/":    "./js/modules/"
+    }
+  }
+  </script>
+
+  <!-- Entry point como ES Module — diferido por defecto -->
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+
+  <!-- Web Component: navegación sticky con toggle de tema -->
+  <nav-header></nav-header>
+
+  <main id="main">
+
+    <!-- ── Hero ─────────────────────────────────────────────── -->
+    <section id="inicio" class="hero" aria-labelledby="hero-title">
+      <div class="hero__content">
+        <p class="hero__badge" aria-label="presentación">👋 Bienvenido a mi portfolio</p>
+        <h1 id="hero-title" class="hero__title">
+          Hola, soy <em class="hero__name">Martín</em>
+        </h1>
+        <p class="hero__subtitle">
+          Desarrollador Web · Estudiante de Multimedios · Amante de la web moderna
+        </p>
+        <nav class="hero__actions" aria-label="Acciones principales">
+          <a href="#proyectos" class="btn btn--primary">Ver proyectos</a>
+          <a href="#contacto" class="btn btn--outline">Contactarme</a>
+        </nav>
+      </div>
+
+      <!-- Decoración visual con CSS puro -->
+      <div class="hero__decoration" aria-hidden="true">
+        <div class="hero__blob"></div>
+        <div class="hero__orb hero__orb--1"></div>
+        <div class="hero__orb hero__orb--2"></div>
+        <div class="hero__grid"></div>
+      </div>
+    </section>
+
+    <!-- ── Sobre mí ───────────────────────────────────────── -->
+    <section id="sobre-mi" class="section" aria-labelledby="about-title">
+      <div class="container">
+        <header class="section__header">
+          <h2 id="about-title" class="section__title">Sobre mí</h2>
+          <div class="section__divider" aria-hidden="true"></div>
+        </header>
+
+        <div class="about-grid">
+          <div class="about__text">
+            <p>
+              Soy estudiante de <strong>Tecnologías de Información con énfasis en Multimedios</strong>
+              en la UNA. Me apasiona construir experiencias web modernas, accesibles y de alto rendimiento.
+            </p>
+            <p>
+              A lo largo de la carrera he trabajado con HTML semántico, CSS avanzado con custom properties,
+              Grid y Flexbox, JavaScript moderno con ES Modules, Web Components nativos, APIs asíncronas
+              con Fetch y AbortController, y herramientas de optimización web.
+            </p>
+          </div>
+
+          <ul class="about__stats" aria-label="Estadísticas">
+            <li class="stat">
+              <span class="stat__value">15+</span>
+              <span class="stat__label">Laboratorios</span>
+            </li>
+            <li class="stat">
+              <span class="stat__value">14</span>
+              <span class="stat__label">Temas vistos</span>
+            </li>
+            <li class="stat">
+              <span class="stat__value">2026</span>
+              <span class="stat__label">Año activo</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Habilidades ────────────────────────────────────── -->
+    <section id="habilidades" class="section section--alt" aria-labelledby="skills-title">
+      <div class="container">
+        <header class="section__header">
+          <h2 id="skills-title" class="section__title">Habilidades</h2>
+          <div class="section__divider" aria-hidden="true"></div>
+        </header>
+
+        <!-- Web Components: <skill-badge> -->
+        <div class="skills-grid">
+          <skill-badge label="HTML5" icon="html" level="90"></skill-badge>
+          <skill-badge label="CSS Avanzado" icon="css" level="85"></skill-badge>
+          <skill-badge label="JavaScript" icon="js" level="82"></skill-badge>
+          <skill-badge label="ES Modules" icon="esm" level="78"></skill-badge>
+          <skill-badge label="Web Components" icon="wc" level="72"></skill-badge>
+          <skill-badge label="Async / Fetch" icon="async" level="76"></skill-badge>
+          <skill-badge label="Node.js" icon="node" level="62"></skill-badge>
+          <skill-badge label="Express" icon="express" level="55"></skill-badge>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Proyectos (GitHub API) ─────────────────────────── -->
+    <section id="proyectos" class="section" aria-labelledby="projects-title">
+      <div class="container">
+        <header class="section__header">
+          <h2 id="projects-title" class="section__title">Proyectos</h2>
+          <div class="section__divider" aria-hidden="true"></div>
+          <p class="section__subtitle">Repositorios cargados en tiempo real desde GitHub</p>
+        </header>
+
+        <!-- aria-busy: true mientras carga, false cuando termina (actualizado por JS) -->
+        <div id="projects-grid" class="projects-grid" role="list" aria-live="polite" aria-busy="true">
+          <!-- Skeleton loaders — reemplazados por JS -->
+          <div class="skeleton-card" aria-hidden="true"></div>
+          <div class="skeleton-card" aria-hidden="true"></div>
+          <div class="skeleton-card" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Contacto ───────────────────────────────────────── -->
+    <section id="contacto" class="section section--alt" aria-labelledby="contact-title">
+      <div class="container container--narrow">
+        <header class="section__header">
+          <h2 id="contact-title" class="section__title">Contacto</h2>
+          <div class="section__divider" aria-hidden="true"></div>
+        </header>
+
+        <div class="contact-card">
+          <p class="contact__text">
+            ¿Tenés un proyecto en mente o querés colaborar? ¡Escribime!
+          </p>
+          <a href="mailto:martincamareno@gmail.com" class="btn btn--primary btn--large">
+            martincamareno@gmail.com
+          </a>
+          <div class="contact__links">
+            <a
+              href="https://github.com/harmar03"
+              class="contact__link"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Perfil de GitHub de Martín"
+            >
+              GitHub ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer__text">
+        Hecho con <span aria-label="amor">♥</span> por <strong>Martín Camareno</strong> · 2026
+      </p>
+      <p class="footer__tech">
+        HTML · CSS @layer · ES Modules · Web Components · Fetch API · GitHub Pages
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>
